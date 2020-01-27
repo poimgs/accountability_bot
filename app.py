@@ -7,9 +7,35 @@ bot = telegram.Bot(token=TOKEN)
 
 app = Flask(__name__)
 
+contexts = {
+    'what_is_important': 
+    {
+        'conversation_steps': ['first_question', 'first_question_why', 'second_question', 'second_question_why', 'wait'],
+        'conversation_steps_answers': {'first_question': 'What was important to you today?', 'first_question_why': 'Why?', 'second_question': 'On a scale of 1-10, how was your day?','second_question_why': 'Why?', 'wait': 'Thank you for your answers, I am looking forward to hearing more from you tomorrow!'}
+    }
+}
+context_tracker = ''
+conversation_step_tracker = 0
+
+def conversation():
+    max_steps = len(contexts[context_tracker]['conversation_steps_answers'])
+
+    if conversation_step_tracker <= max_steps:
+        # Also collect the latest message and store it somewhere 
+        bot.sendMessage(chat_id=chat_id, text=contexts[context_tracker]['conversation_steps_answers'][conversation_steps[conversation_step_tracker]])
+        conversation_step_tracker += 1
+    else:
+        bot.sendMessage(chat_id=chat_id, text='Bruh, stop leh')
+
+def first_conversation():
+    bot.sendMessage(chat_id=chat_id, text='Hello Steven! The Telegram bot is now working! :D')
+    context_tracker = 'what_is_important'
+
+    bot.sendMessage(chat_id=chat_id, text=contexts[context_tracker]['conversation_steps_answers'][conversation_steps[conversation_step_tracker]])
+    conversation_step_tracker += 1
+
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
-    
     # retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 
@@ -20,21 +46,10 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     # for debugging purposes only
     print("got text message :", text)
-    # the first time you chat with the bot AKA the welcoming message
-    one_to_ten = ['1', '2', '3', '4', '5', '6', '7', '8', '9' ,'10']
-    if text == "/start":
-        # print the welcoming message
-        bot_welcome = 'Hello Steven! The Telegram bot is now working! :D'
-        first_question = 'On a scale of 1-10, how was today?'
-        # send the welcoming message
-        bot.sendMessage(chat_id=chat_id, text=bot_welcome, reply_to_message_id=msg_id)
-        bot.sendMessage(chat_id=chat_id, text=first_question, reply_to_message_id=msg_id)
-    elif text in one_to_ten:
-        second_question = 'Why?'
-        bot.sendMessage(chat_id=chat_id, text=second_question, reply_to_message_id=msg_id)
+    if context_tracker:
+        conversation()
     else:
-        bot.sendMessage(chat_id=chat_id, text='Hello!', reply_to_message_id=msg_id)
-
+        first_conversation()
     return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])

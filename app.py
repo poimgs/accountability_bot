@@ -51,6 +51,7 @@ def first_conversation(chatId):
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
     global context_tracker
+    global conversation_step_tracker
     # retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 
@@ -61,7 +62,11 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     # for debugging purposes only
     print("got text message :", text)
-    if context_tracker:
+    if text == '/start':
+        context_tracker = ''
+        conversation_step_tracker = 0
+        first_conversation(chat_id)
+    elif context_tracker:
         conversation(chat_id)
     else:
         first_conversation(chat_id)

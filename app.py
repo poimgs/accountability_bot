@@ -22,7 +22,7 @@ def conversation(chatId):
     global conversation_step_tracker
     global contexts
 
-    max_steps = len(contexts[context_tracker]['conversation_steps_answers'])
+    max_steps = len(contexts[context_tracker]['conversation_steps_answers']) - 1
 
     if conversation_step_tracker <= max_steps:
         # Also collect the latest message and store it somewhere 
@@ -50,6 +50,7 @@ def first_conversation(chatId):
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
+    global context_tracker
     # retrieve the message in JSON and then transform it to Telegram object
     update = telegram.Update.de_json(request.get_json(force=True), bot)
 

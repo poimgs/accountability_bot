@@ -7,6 +7,8 @@ bot = telegram.Bot(token=TOKEN)
 
 app = Flask(__name__)
 
+context_tracker = ''
+conversation_step_tracker = 0
 contexts = {
     'what_is_important': 
     {
@@ -14,8 +16,6 @@ contexts = {
         'conversation_steps_answers': {'first_question': 'What was important to you today?', 'first_question_why': 'Why?', 'second_question': 'On a scale of 1-10, how was your day?','second_question_why': 'Why?', 'wait': 'Thank you for your answers, I am looking forward to hearing more from you tomorrow!'}
     }
 }
-context_tracker = ''
-conversation_step_tracker = 0
 
 def conversation():
     max_steps = len(contexts[context_tracker]['conversation_steps_answers'])
@@ -31,6 +31,8 @@ def first_conversation():
     bot.sendMessage(chat_id=chat_id, text='Hello Steven! The Telegram bot is now working! :D')
     context_tracker = 'what_is_important'
 
+    print(chat_id)
+    print(msg_id)
     bot.sendMessage(chat_id=chat_id, text=contexts[context_tracker]['conversation_steps_answers'][conversation_steps[conversation_step_tracker]])
     conversation_step_tracker += 1
 
@@ -48,9 +50,10 @@ def respond():
     print("got text message :", text)
     if context_tracker:
         conversation()
+        return 'ok'
     else:
         first_conversation()
-    return 'ok'
+        return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():

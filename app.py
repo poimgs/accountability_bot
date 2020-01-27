@@ -48,12 +48,12 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     # for debugging purposes only
     print("got text message :", text)
-    if context_tracker:
-        conversation(chat_id)
-        return 'ok'
-    else:
-        first_conversation(chat_id)
-        return 'ok'
+    # if context_tracker:
+    #     conversation(chat_id)
+    #     return 'ok'
+    # else:
+    #     first_conversation(chat_id)
+    #     return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():

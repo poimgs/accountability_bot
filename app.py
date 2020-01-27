@@ -26,7 +26,6 @@ def conversation(chatId):
         conversation_step_tracker += 1
     else:
         bot.sendMessage(chat_id=chatId, text='Bruh, stop leh')
-    return 
 
 def first_conversation(chatId):
     bot.sendMessage(chat_id=chatId, text='Hello Steven! The Telegram bot is now working! :D')
@@ -34,7 +33,6 @@ def first_conversation(chatId):
 
     bot.sendMessage(chat_id=chatId, text=contexts[context_tracker]['conversation_steps_answers'][conversation_steps[conversation_step_tracker]])
     conversation_step_tracker += 1
-    return
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
@@ -48,12 +46,13 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     # for debugging purposes only
     print("got text message :", text)
-    # if context_tracker:
-    #     conversation(chat_id)
-    #     return 'ok'
-    # else:
-    #     first_conversation(chat_id)
-    #     return 'ok'
+    if context_tracker:
+        conversation(chat_id)
+        return 'ok'
+    else:
+        first_conversation(chat_id)
+        return 'ok'
+    return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():

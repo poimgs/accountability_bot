@@ -22,7 +22,9 @@ def conversation(chatId):
 
     if conversation_step_tracker <= max_steps:
         # Also collect the latest message and store it somewhere 
-        bot.sendMessage(chat_id=chatId, text=contexts[context_tracker]['conversation_steps_answers'][conversation_steps[conversation_step_tracker]])
+        current_step = contexts['what_is_important']['conversation_steps'][conversation_step_tracker]
+        message = contexts['what_is_important']['conversation_steps_answers'][current_step]
+        bot.sendMessage(chat_id=chatId, text=message)
         conversation_step_tracker += 1
     else:
         bot.sendMessage(chat_id=chatId, text='Bruh, stop leh')
@@ -30,8 +32,8 @@ def conversation(chatId):
 def first_conversation(chatId):
     bot.sendMessage(chat_id=chatId, text='Hello Steven! The Telegram bot is now working! :D')
     context_tracker = 'what_is_important'
-
-    bot.sendMessage(chat_id=chatId, text=contexts[context_tracker]['conversation_steps_answers'][conversation_steps[conversation_step_tracker]])
+    message = contexts['what_is_important']['conversation_steps_answers'][current_step]
+    bot.sendMessage(chat_id=chatId, text=message)
     conversation_step_tracker += 1
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
@@ -46,13 +48,11 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     # for debugging purposes only
     print("got text message :", text)
-    # if context_tracker:
-    #     conversation(chat_id)
-    #     return 'ok'
-    # else:
-    #     first_conversation(chat_id)
-    #     return 'ok'
-    # return 'ok'
+    if context_tracker:
+        conversation(chat_id)
+    else:
+        first_conversation(chat_id)
+    return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():

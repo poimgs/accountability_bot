@@ -22,8 +22,9 @@ def conversation(chatId):
 
     if conversation_step_tracker <= max_steps:
         # Also collect the latest message and store it somewhere 
-        current_step = contexts['what_is_important']['conversation_steps'][conversation_step_tracker]
-        message = contexts['what_is_important']['conversation_steps_answers'][current_step]
+        current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
+        message = contexts[context_tracker]['conversation_steps_answers'][current_step]
+
         bot.sendMessage(chat_id=chatId, text=message)
         conversation_step_tracker += 1
     else:
@@ -32,7 +33,10 @@ def conversation(chatId):
 def first_conversation(chatId):
     bot.sendMessage(chat_id=chatId, text='Hello Steven! The Telegram bot is now working! :D')
     context_tracker = 'what_is_important'
-    message = contexts['what_is_important']['conversation_steps_answers'][current_step]
+
+    current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
+    message = contexts[context_tracker]['conversation_steps_answers'][current_step]
+    
     bot.sendMessage(chat_id=chatId, text=message)
     conversation_step_tracker += 1
 

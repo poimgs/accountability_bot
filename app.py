@@ -17,7 +17,7 @@ contexts = {
     }
 }
 
-def conversation(chatId):
+def conversation(chatId, contexts, context_tracker, conversation_step_tracker):
     max_steps = len(contexts[context_tracker]['conversation_steps_answers'])
 
     if conversation_step_tracker <= max_steps:
@@ -30,13 +30,13 @@ def conversation(chatId):
     else:
         bot.sendMessage(chat_id=chatId, text='Bruh, stop leh')
 
-def first_conversation(chatId):
+def first_conversation(chatId, contexts, context_tracker, conversation_step_tracker):
     bot.sendMessage(chat_id=chatId, text='Hello Steven! The Telegram bot is now working! :D')
     context_tracker = 'what_is_important'
 
     current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
     message = contexts[context_tracker]['conversation_steps_answers'][current_step]
-    
+
     bot.sendMessage(chat_id=chatId, text=message)
     conversation_step_tracker += 1
 
@@ -53,9 +53,9 @@ def respond():
     # for debugging purposes only
     print("got text message :", text)
     if context_tracker:
-        conversation(chat_id)
+        conversation(chat_id, contexts, context_tracker, conversation_step_tracker)
     else:
-        first_conversation(chat_id)
+        first_conversation(chat_id, contexts, context_tracker, conversation_step_tracker)
     return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])

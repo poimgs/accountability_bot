@@ -52,7 +52,7 @@ def respond():
     #     conversation(chat_id)
     # else:
     #     first_conversation(chat_id)
-    bot.sendMessage(chat_id=chat_id, text='Please be safe')
+    bot.sendMessage(chat_id=chat_id, text=message)
     return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])
@@ -67,7 +67,5 @@ def set_webhook():
 def index():
     return '.'
 
-# if __name__ == '__main__':
-#     app.run(threaded=True)
-
-print(context_tracker)
+if __name__ == '__main__':
+    app.run(threaded=True)

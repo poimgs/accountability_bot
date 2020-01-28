@@ -9,7 +9,7 @@ bot = telegram.Bot(token=TOKEN)
 
 app = Flask(__name__)
 
-context_tracker = ''
+context_tracker = 'what_is_important'
 conversation_step_tracker = 0
 contexts = {
     'what_is_important': 
@@ -56,7 +56,7 @@ def conversation(chatId):
         bot.sendMessage(chat_id=chatId, text=message)
 
         #restart 
-        context_tracker = ''
+        # context_tracker = ''
         conversation_step_tracker = 0
         print(conversation_step_tracker)
         print(context_tracker)
@@ -95,10 +95,8 @@ def respond():
         context_tracker = ''
         conversation_step_tracker = 0
         first_conversation(chat_id)
-    elif context_tracker:
-        conversation(chat_id)
     else:
-        first_conversation(chat_id)
+        conversation(chat_id)
     return 'ok'
 
 @app.route('/set_webhook', methods=['GET', 'POST'])

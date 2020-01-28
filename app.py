@@ -1,6 +1,8 @@
 from flask import Flask, request 
 import telegram 
 from telebot.credentials import bot_token, bot_user_name, URL
+import time
+import datetime
 
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
@@ -17,6 +19,20 @@ contexts = {
     }
 }
 
+def wait(chatId):
+    # get tomorrow's preferred date 
+    bot.sendMessage(chat_id=chatId, text='You should receive a message in about 5 seconds')
+    now = datetime.datetime.now()
+
+    # wait a certain number of seconds
+    test_time = now + datetime.timedelta(seconds=5)
+
+    to_wait = test_time - now
+    to_wait = to_wait.total_seconds()
+    time.sleep(to_wait)
+
+    bot.sendMessage(chat_id=chatId, text='Hello!')
+
 def conversation(chatId):
     global context_tracker
     global conversation_step_tracker
@@ -24,7 +40,7 @@ def conversation(chatId):
 
     max_steps = len(contexts[context_tracker]['conversation_steps_answers']) - 1
 
-    if conversation_step_tracker <= max_steps:
+    if conversation_step_tracker < max_steps:
         # Also collect the latest message and store it somewhere 
         current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
         message = contexts[context_tracker]['conversation_steps_answers'][current_step]
@@ -32,7 +48,17 @@ def conversation(chatId):
         bot.sendMessage(chat_id=chatId, text=message)
         conversation_step_tracker += 1
     else:
-        bot.sendMessage(chat_id=chatId, text='Bruh, stop leh')
+        current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
+        message = contexts[context_tracker]['conversation_steps_answers'][current_step]
+
+        bot.sendMessage(chat_id=chatId, text=message)
+
+        #restart 
+        context_tracker = ''
+        conversation_step_tracker = 0
+
+        #Resend messages after a while
+        wait(chat_id)
 
 def first_conversation(chatId):
     global context_tracker

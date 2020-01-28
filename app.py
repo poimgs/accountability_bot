@@ -61,7 +61,7 @@ def conversation(chatId):
         print(conversation_step_tracker)
         print(context_tracker)
         #Resend messages after a while
-        wait(chat_id)
+        wait(chatId)
 
 def first_conversation(chatId):
     global context_tracker

@@ -49,6 +49,7 @@ def conversation(chatId):
         conversation_step_tracker += 1
         print(conversation_step_tracker)
         print(context_tracker)
+        print('I am in conversation')
     else:
         current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
         message = contexts[context_tracker]['conversation_steps_answers'][current_step]
@@ -60,6 +61,7 @@ def conversation(chatId):
         conversation_step_tracker = 0
         print(conversation_step_tracker)
         print(context_tracker)
+        print('I am in conversation')
         #Resend messages after a while
         wait(chatId)
 
@@ -76,6 +78,8 @@ def first_conversation(chatId):
 
     bot.sendMessage(chat_id=chatId, text=message)
     conversation_step_tracker += 1
+
+    print('I am in first conversation')
 
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():

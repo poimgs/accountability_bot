@@ -4,21 +4,29 @@ from telebot.credentials import bot_token, bot_user_name, URL
 import time
 import datetime
 
+# Creating bot object and app object
 TOKEN = bot_token
 bot = telegram.Bot(token=TOKEN)
 
 app = Flask(__name__)
 
-context_tracker = 'what_is_important'
+# trackers to keep track of conversation
+context_tracker = ''
 conversation_step_tracker = 0
+
 contexts = {
     'what_is_important': 
     {
-        'conversation_steps': ['first_question', 'first_question_why', 'second_question', 'second_question_why', 'wait'],
-        'conversation_steps_answers': {'first_question': 'What was important to you today?', 'first_question_why': 'Why?', 'second_question': 'On a scale of 1-10, how was your day?','second_question_why': 'Why?', 'wait': 'Thank you for your answers, I am looking forward to hearing more from you tomorrow!'}
+        'conversation_steps': 
+            ['What was important to you today?', 
+             'Why?', 
+             'On a scale of 1-10, how was your day?',
+             'Why?', 
+             'Thank you for your answers, I am looking forward to hearing more from you tomorrow!']
     }
 }
 
+# wait for a period of time before repeating questions in "what is important"
 def wait(chatId):
     # get tomorrow's preferred date 
     bot.sendMessage(chat_id=chatId, text='You should receive a message in about 5 seconds')
@@ -33,26 +41,24 @@ def wait(chatId):
 
     bot.sendMessage(chat_id=chatId, text='Hello!')
 
+# takes note of conversation trackers and provide appropriate responses 
 def conversation(chatId):
     global context_tracker
     global conversation_step_tracker
     global contexts
 
-    max_steps = len(contexts[context_tracker]['conversation_steps_answers']) - 1
+    max_steps = len(contexts[context_tracker]['conversation_steps']) - 1
 
     if conversation_step_tracker < max_steps:
         # Also collect the latest message and store it somewhere 
-        current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
-        message = contexts[context_tracker]['conversation_steps_answers'][current_step]
+        message = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
 
         bot.sendMessage(chat_id=chatId, text=message)
         conversation_step_tracker += 1
         print(conversation_step_tracker)
         print(context_tracker)
-        print('I am in conversation')
     else:
-        current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
-        message = contexts[context_tracker]['conversation_steps_answers'][current_step]
+        message = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
 
         bot.sendMessage(chat_id=chatId, text=message)
 
@@ -61,10 +67,10 @@ def conversation(chatId):
         conversation_step_tracker = 0
         print(conversation_step_tracker)
         print(context_tracker)
-        print('I am in conversation')
         #Resend messages after a while
         wait(chatId)
 
+# if user is talking to bot for the first time, initiate first conversation
 def first_conversation(chatId):
     global context_tracker
     global conversation_step_tracker
@@ -72,15 +78,12 @@ def first_conversation(chatId):
 
     bot.sendMessage(chat_id=chatId, text='Hello Steven! The Telegram bot is now working! :D')
     context_tracker = 'what_is_important'
-
-    current_step = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
-    message = contexts[context_tracker]['conversation_steps_answers'][current_step]
+    message = contexts[context_tracker]['conversation_steps'][conversation_step_tracker]
 
     bot.sendMessage(chat_id=chatId, text=message)
     conversation_step_tracker += 1
 
-    print('I am in first conversation')
-
+# receives telegram updates whenever a user sends a message
 @app.route('/{}'.format(TOKEN), methods=['POST'])
 def respond():
     global context_tracker
@@ -95,6 +98,8 @@ def respond():
     text = update.message.text.encode('utf-8').decode()
     # for debugging purposes only
     print("got text message :", text)
+
+    # simple logic flow 
     if text == '/start':
         context_tracker = ''
         conversation_step_tracker = 0
@@ -103,6 +108,7 @@ def respond():
         conversation(chat_id)
     return 'ok'
 
+# To set webhook for telegram to send POST requests to 
 @app.route('/set_webhook', methods=['GET', 'POST'])
 def set_webhook():
     s = bot.setWebhook('{URL}{HOOK}'.format(URL=URL, HOOK=TOKEN))

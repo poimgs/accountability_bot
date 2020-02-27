@@ -47,6 +47,10 @@ def conversation(chatId):
     global conversation_step_tracker
     global contexts
 
+    # temporary placeholder
+    if context_tracker = '':
+        context_tracker = 'what_is_important'
+
     max_steps = len(contexts[context_tracker]['conversation_steps']) - 1
 
     if conversation_step_tracker < max_steps:

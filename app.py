@@ -67,9 +67,30 @@ def respond():
 
     # simple logic flow 
     if text == '/start':
+        print(chat_id)
         bot.sendMessage(chat_id=chat_id, text='Yo Steven! This bot is up and running! :)')
         bot.sendMessage(chat_id=chat_id, text='Hopefully, this bot gets you to be more accountable to yourself!')
-    elif text == 'delete current database':
+    
+    elif text == '/previousfocuses':
+        connection = sqlite3.connect('data.db')
+        cursor = connection.cursor()
+
+        get_history_query = "SELECT * FROM accountability"
+        result = cursor.execute(get_history_query)
+        rows = result.fetchall()
+
+        connection.commit()
+        connection.close()
+
+        long_string_of_focuses = ""
+        for row in rows:
+            focus = str(row[2])
+            long_string_of_focuses += focus + '\n'
+
+        bot.sendMessage(chat_id=chat_id, text='Here is what you wrote previously!')
+        bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
+
+    elif text == '/deletedatabase':
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
 
@@ -78,6 +99,7 @@ def respond():
 
         connection.commit()
         connection.close()
+        bot.sendMessage(chat_id=chat_id, text='Ok! Your history of messages has been deleted!')
     else:
         # Database logic here
         save_message(text)

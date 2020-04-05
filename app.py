@@ -23,8 +23,8 @@ def save_message(message):
     cursor = connection.cursor()
 
     get_data_query = "SELECT * FROM accountability"
-    result = cursor.execute(get_data_query)
-    rows = result.fetchall()
+    cursor.execute(get_data_query)
+    rows = cursor.fetchall()
     if rows:
         last_index = rows[-1][0]
         index_to_insert = last_index + 1

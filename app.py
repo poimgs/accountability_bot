@@ -64,7 +64,7 @@ def respond():
 
     # simple logic flow 
     if text == '/start':
-        bot.sendMessage(chat_id=chatId, text='Yo Steven! This bot is up and running! :)')
+        bot.sendMessage(chat_id=chat_id, text='Yo Steven! This bot is up and running! :)')
     else:
         # Database logic here
         save_message(text)

@@ -32,7 +32,7 @@ def save_message(message):
         index_to_insert = 1
 
     row_to_insert = (index_to_insert, current_time, message)
-    insert_query = "INSERT INTO accountability values (?,?,?)"
+    insert_query = "INSERT INTO accountability values (%s,%s,%s)"
     cursor.execute(insert_query, row_to_insert)
 
     connection.commit()

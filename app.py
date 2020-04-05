@@ -11,21 +11,6 @@ bot = telegram.Bot(token=TOKEN)
 
 app = Flask(__name__)
 
-# wait for a period of time before repeating questions in "what is important"
-def wait(chatId):
-    # get tomorrow's preferred date 
-    bot.sendMessage(chat_id=chatId, text='You should receive a message in about 5 minutes')
-    now = datetime.datetime.now()
-
-    # wait a certain number of seconds
-    test_time = now + datetime.timedelta(minutes=5)
-
-    to_wait = test_time - now
-    to_wait = to_wait.total_seconds()
-    time.sleep(to_wait)
-
-    bot.sendMessage(chat_id=chatId, text='Hey Steven! What is your current focus?')
-
 def save_message(message):
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -82,10 +67,13 @@ def respond():
         connection.commit()
         connection.close()
 
-        long_string_of_focuses = ""
-        for row in rows:
-            focus = str(row[2])
-            long_string_of_focuses += focus + '\n'
+        if rows:
+            long_string_of_focuses = ""
+            for row in rows:
+                focus = str(row[2])
+                long_string_of_focuses += focus + '\n'
+        else: 
+            long_string_of_focuses = 'Seems like the database is empty right now!'
 
         bot.sendMessage(chat_id=chat_id, text='Here is what you wrote previously!')
         bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)

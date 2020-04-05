@@ -72,11 +72,11 @@ def respond():
             for row in rows:
                 focus = str(row[2])
                 long_string_of_focuses += focus + '\n'
+            bot.sendMessage(chat_id=chat_id, text='Here is what you wrote previously!')
+            bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
         else: 
             long_string_of_focuses = 'Seems like the database is empty right now!'
-
-        bot.sendMessage(chat_id=chat_id, text='Here is what you wrote previously!')
-        bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
+            bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
 
     elif text == '/deletedatabase':
         connection = sqlite3.connect('data.db')

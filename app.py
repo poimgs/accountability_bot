@@ -82,8 +82,6 @@ def respond():
         # Database logic here
         save_message(text)
         bot.sendMessage(chat_id=chat_id, text='Thanks for keeping me updated! :D')
-        time.sleep(60*5)
-        bot.sendMessage(chat_id=chatId, text='Hey Steven! What is your current focus?')
     return 'ok'
 
 # To set webhook for telegram to send POST requests to 

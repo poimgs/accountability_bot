@@ -27,6 +27,7 @@ def wait(chatId):
     bot.sendMessage(chat_id=chatId, text='Hey Steven! What is your current focus?')
 
 def save_message(message):
+
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     connection = sqlite3.connect('data.db')
@@ -36,9 +37,11 @@ def save_message(message):
     get_data_query = "SELECT * FROM accountability"
     result = cursor.execute(get_data_query)
     rows = result.fetchall()
-    last_index = rows[-1][0]
-
-    index_to_insert = last_index + 1
+    if rows:
+        last_index = rows[-1][0]
+        index_to_insert = last_index + 1
+    else: 
+        index_to_insert = 1
 
     row_to_insert = (index_to_insert, current_time, message)
     insert_query = "INSERT INTO accountability values (?,?,?)"

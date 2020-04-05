@@ -64,8 +64,8 @@ def respond():
         cursor = connection.cursor()
 
         get_history_query = "SELECT * FROM accountability"
-        result = cursor.execute(get_history_query)
-        rows = result.fetchall()
+        cursor.execute(get_history_query)
+        rows = cursor.fetchall()
 
         connection.commit()
         connection.close()

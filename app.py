@@ -3,7 +3,10 @@ import telegram
 from telebot.credentials import bot_token, bot_user_name, URL
 import time
 import datetime
-import sqlite3
+import os
+import psycopg2
+
+DATABASE_URL = os.environ['DATABASE_URL']
 
 # Creating bot object and app object
 TOKEN = bot_token
@@ -15,7 +18,7 @@ def save_message(message):
 
     current_time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
-    connection = sqlite3.connect('data.db')
+    connection = psycopg2.connect(DATABASE_URL, sslmode='require')
 
     cursor = connection.cursor()
 
@@ -57,7 +60,7 @@ def respond():
         bot.sendMessage(chat_id=chat_id, text='Hopefully, this bot gets you to be more accountable to yourself!')
     
     elif text == '/previousfocuses':
-        connection = sqlite3.connect('data.db')
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
 
         get_history_query = "SELECT * FROM accountability"
@@ -78,8 +81,18 @@ def respond():
             long_string_of_focuses = 'Seems like the database is empty right now!'
             bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
 
+    elif text == '/createdatabase':
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+
+        create_table = "CREATE TABLE accountability (id int, datetime text, message text)"
+        cursor.execute(create_table)
+
+        connection.commit()
+        connection.close()
+    
     elif text == '/deletedatabase':
-        connection = sqlite3.connect('data.db')
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
         cursor = connection.cursor()
 
         delete_table_query = "DELETE FROM accountability"

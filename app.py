@@ -74,8 +74,7 @@ def respond():
             long_string_of_focuses = ""
             for row in rows:
                 focus = str(row[2])
-                date_and_time = str(row[1])
-                long_string_of_focuses += date_and_time + focus + '\n'
+                long_string_of_focuses += focus + '\n'
             bot.sendMessage(chat_id=chat_id, text='Here is what you wrote previously!')
             bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
         else: 

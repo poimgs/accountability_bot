@@ -94,7 +94,7 @@ def respond():
 
         if rows:
             long_string_of_focuses = ""
-            for row in rows[-3:]:
+            for row in rows:
                 focus = str(row[2])
                 date = str(row[1])[:10]
                 long_string_of_focuses += date + ': ' + focus + '\n'

@@ -72,9 +72,32 @@ def respond():
 
         if rows:
             long_string_of_focuses = ""
-            for row in rows:
+            for row in rows[-3:]:
                 focus = str(row[2])
                 long_string_of_focuses += focus + '\n'
+            bot.sendMessage(chat_id=chat_id, text='Here is what you wrote previously!')
+            bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
+        else: 
+            long_string_of_focuses = 'Seems like the database is empty right now!'
+            bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
+
+    elif text == '/allpreviousfocuses':
+        connection = psycopg2.connect(DATABASE_URL, sslmode='require')
+        cursor = connection.cursor()
+
+        get_history_query = "SELECT * FROM accountability"
+        cursor.execute(get_history_query)
+        rows = cursor.fetchall()
+
+        connection.commit()
+        connection.close()
+
+        if rows:
+            long_string_of_focuses = ""
+            for row in rows[-3:]:
+                focus = str(row[2])
+                date = str(row[1])[:10]
+                long_string_of_focuses += date + ': ' + focus + '\n'
             bot.sendMessage(chat_id=chat_id, text='Here is what you wrote previously!')
             bot.sendMessage(chat_id=chat_id, text=long_string_of_focuses)
         else: 

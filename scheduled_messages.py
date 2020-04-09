@@ -7,7 +7,7 @@ def start():
     bot = telegram.Bot(token=TOKEN)
 
     chat_id = 247547763
-    bot.sendMessage(chat_id=chat_id, text='What is your current focus?')
+    bot.sendMessage(chat_id=chat_id, text='What is your current choice?')
 
 if __name__ == '__main__':
     start()

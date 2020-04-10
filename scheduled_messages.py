@@ -1,8 +1,7 @@
 import telegram 
 from telebot.credentials import bot_token, bot_user_name, URL
 
-
-def start():
+def keep_accountable():
     TOKEN = bot_token
     bot = telegram.Bot(token=TOKEN)
 
@@ -10,4 +9,4 @@ def start():
     bot.sendMessage(chat_id=chat_id, text='What is your current choice?')
 
 if __name__ == '__main__':
-    start()
+    keep_accountable()

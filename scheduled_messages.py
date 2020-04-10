@@ -20,7 +20,7 @@ def keep_accountable():
     connection.commit()
     connection.close()
 
-    last_timestamp = row[0][1]
+    last_timestamp = rows[0][1]
     last_timestamp_modified = datetime.datetime(last_timestamp.year,last_timestamp.month,last_timestamp.day,last_timestamp.hour)
 
     now = datetime.datetime.now()

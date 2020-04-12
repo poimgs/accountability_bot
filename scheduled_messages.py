@@ -28,11 +28,18 @@ def keep_accountable():
     now_modified = datetime.datetime(now.year,now.month,now.day,now.hour)
     one_hour_before = now_modified - datetime.timedelta(hours=1)
 
+    one_day_later = now_modified + datetime.timedelta(days=1)
+
     print(last_timestamp_modified)
     print(one_hour_before)
+    print(one_day_later)
 
     if last_timestamp_modified == one_hour_before:
         bot.sendMessage(chat_id=247547763, text='What is your current choice?')
+    
+    elif last_timestamp_modified == one_day_later:
+        bot.sendMessage(chat_id=247547763, text='Hey, it\'s been a day since you last updated me, seems like you are crashing or have crashed')
+        bot.sendMessage(chat_id=247547763, text='It\'s time to seek help! :)')
 
 if __name__ == '__main__':
     keep_accountable()

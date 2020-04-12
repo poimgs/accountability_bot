@@ -1,12 +1,12 @@
-import sqlite3
+# import sqlite3
 
-connection = sqlite3.connect('data.db')
+# connection = sqlite3.connect('data.db')
 
-cursor = connection.cursor()
+# cursor = connection.cursor()
 
-create_table = "CREATE TABLE accountability (id int, datetime text, message text)"
-cursor.execute(create_table)
+# create_table = "CREATE TABLE accountability (id int, datetime text, message text)"
+# cursor.execute(create_table)
 
-connection.commit()
+# connection.commit()
 
-connection.close()
+# connection.close()
